@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>STUDENT SIGN UP</title>
+  <link rel="stylesheet" href="CSS/accountcreate.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+</head>
+<script>
+    document.querySelectorAll('.dropbtn').forEach(button => {
+  button.addEventListener('click', e => {
+    e.stopPropagation();
+
+    const dropdown = button.nextElementSibling;
+    const isShown = dropdown.classList.contains('show');
+
+    // Close all dropdowns first
+    document.querySelectorAll('.dropdown-content.show').forEach(dc => {
+      dc.classList.remove('show');
+      dc.style.left = '';
+      dc.style.right = '';
+    });
+
+    if (!isShown) { 
+      dropdown.classList.add('show');
+
+      // Check overflow and adjust alignment if needed
+      const rect = dropdown.getBoundingClientRect();
+      const overflowRight = rect.right - window.innerWidth;
+
+      if (overflowRight > 0) {
+        dropdown.style.left = 'auto';
+        dropdown.style.right = '0';
+      } else {
+        dropdown.style.left = '0';
+        dropdown.style.right = 'auto';
+      }
+    }
+  });
+});
+
+// Close dropdowns if clicking outside
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dropdown-content.show').forEach(dc => {
+    dc.classList.remove('show');
+    dc.style.left = '';
+    dc.style.right = '';
+  });
+});
+
+// Optional: close on window resize to avoid stuck dropdowns
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.dropdown-content.show').forEach(dc => {
+    dc.classList.remove('show');
+    dc.style.left = '';
+    dc.style.right = '';
+  });
+});
+</script>
+<body>
+  <nav class="navbar">
+    <div class="nav-header">
+      <p class="luis">Luis Y. Ferrer Jr. Senior High School</p>
+      <p class="qr">QR Attendance</p>
+    </div>
+    <div class="create-container" onclick="window.location.href='index.html'">
+      <button class="create-button">
+        Home
+      </button>
+    <button class="hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </div>
+  </nav>
+  <div class="signup-form">
+    <div class="signup-box">
+      <div>
+        <p class="signup">Sign Up</p>
+      </div>
+      <form>
+        <label for="fullname">Full Name (Last, First, Initial):</label><br>
+        <input type="text" placeholder="Student, Name, A." id="fullname" name="fullname"><br>
+        <label for="email">Email:</label><br>
+        <input type="text" placeholder="email@example.com" id="email" name="email"><br>
+        <label for="pwd">Password:</label><br>
+        <input type="password" placeholder="******" id="pwd" name="pwd"><br>
+        <label for="cpwd">Confirm Password:</label><br>
+        <input type="password" placeholder="********" id="cpwd" name="cpwd"><br>
+        <div class="submit-btn">
+          <input type="submit" value="Create Account">
+        </div>
+      </form>
+    </div>
+  </div>
+<script>
+    document.querySelectorAll('.dropbtn').forEach(button => {
+  button.addEventListener('click', e => {
+    e.stopPropagation();
+
+    const dropdown = button.nextElementSibling;
+    const isShown = dropdown.classList.contains('show');
+
+    // Close all dropdowns first
+    document.querySelectorAll('.dropdown-content.show').forEach(dc => {
+      dc.classList.remove('show');
+      dc.style.left = '';
+      dc.style.right = '';
+    });
+
+    if (!isShown) { 
+      dropdown.classList.add('show');
+
+      // Check overflow and adjust alignment if needed
+      const rect = dropdown.getBoundingClientRect();
+      const overflowRight = rect.right - window.innerWidth;
+
+      if (overflowRight > 0) {
+        dropdown.style.left = 'auto';
+        dropdown.style.right = '0';
+      } else {
+        dropdown.style.left = '0';
+        dropdown.style.right = 'auto';
+      }
+    }
+  });
+});
+
+// Close dropdowns if clicking outside
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dropdown-content.show').forEach(dc => {
+    dc.classList.remove('show');
+    dc.style.left = '';
+    dc.style.right = '';
+  });
+});
+
+// Optional: close on window resize to avoid stuck dropdowns
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.dropdown-content.show').forEach(dc => {
+    dc.classList.remove('show');
+    dc.style.left = '';
+    dc.style.right = '';
+  });
+});
+</script>
+<script>
+  // Show error popup with animation
+  function showErrorPopup(message) {
+    const popup = document.getElementById('error-popup');
+    popup.textContent = message;
+    popup.classList.add('show');
+    setTimeout(() => {
+    popup.classList.remove('show');
+    }, 4000);
+  }
+
+  // AJAX form submission with client-side missing field validation
+  document.getElementById('student-signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const fullName = form['full_name'].value.trim();
+    const email = form['email'].value.trim();
+    const password = form['password'].value;
+    const confirmPassword = form['confirm_password'].value;
+    const missingFields = [];
+    if (!fullName) missingFields.push('Full Name');
+    if (!email) missingFields.push('Email');
+    if (!password) missingFields.push('Password');
+    if (!confirmPassword) missingFields.push('Confirm Password');
+    if (missingFields.length > 0) {
+      showErrorPopup('The following fields are required: ' + missingFields.join(', ') + '.');
+      return;
+    }
+    const formData = new FormData(form);
+    fetch('signup.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        showErrorPopup('Sign up successful! Redirecting...');
+        // If server provided redirect target, use it (e.g., studentpanel.php)
+        const target = data.redirect || 'home.html?signup=success';
+        setTimeout(() => {
+          window.location.href = target;
+        }, 900);
+      } else {
+        showErrorPopup(data.error || 'Unknown error occurred.');
+      }
+    })
+    .catch(() => {
+      showErrorPopup('Network error. Please try again.');
+    });
+  });
+</script>
+</body>
+</html>

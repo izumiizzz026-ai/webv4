@@ -1,0 +1,189 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Navbar styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 14.518vh;
+  background-color: #0c1821; /* Dark green */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+/* Header text moved left with bigger font */
+.nav-header {
+  padding-left: 18.4px;
+}
+/*Text for the navbar*/
+.luis,
+.qr {
+  text-align: left;
+  font-family: "DM Sans", sans-serif;
+  color: #ccc9dc;
+}
+.luis {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.qr {
+  display: block;
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+/*navbar button*/
+.create-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32.75vh;
+  height: 11.14vh;
+}
+.create-button {
+  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #0c1821;
+  background-color: #ccc9dc;
+  border-style: none;
+  border-radius: 34px;
+  width: 25.026vh;
+  height: 7.786vh;
+  transition: color 0.15s ease, transform 0.15s ease-out, background-color 0.15s ease-out;
+}
+.create-button:hover {
+  transform: scale(1.05);
+  color: black;
+}
+.create-button:active {
+  background-color: #a8a5b8;
+  transform: scale(0.905);
+}
+
+/* Hamburger button hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hamburger .bar {
+  height: 3px;
+  width: 75%;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/*signup form and container*/
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  width: 65.104vh;
+  height: 80.87vh;
+}
+
+.signup-box {
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px;
+  align-items: center;
+  justify-content: space-evenly;
+  background-color: #0c1821;
+  width: 65.104vh;
+  height: 79.016vh;
+}
+
+.signup {
+  font-family: "DM Sans", sans-serif;
+  font-size: 2.7rem;
+  font-weight: bold;
+  color: #7badd8;
+}
+
+/* Form styles*/
+.submit-btn {
+  text-align: center;
+}
+label {
+  margin-left: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.667rem;  
+  color: #7badd8;
+}
+input[placeholder] {
+  font-style: italic;
+}
+input[type=text], input[type=password] {
+  font-family: "DM Sans", sans-serif;
+  background-color: #ccc9dc;
+  border-style: none;
+  border-radius: 12px;
+  padding-left: 10px;
+  font-size: 0.929rem;
+  width: 60.378vh;
+  height: 5.716vh;
+  margin-bottom: 2.638vh;
+  transition: background-color 0.15s ease-in;
+}
+input[type=text]:focus, input[type=password]:focus {
+  background-color:#b1aebf;
+}
+input[type=submit] {
+  background-color: #04080b;
+  color: #0c1821;
+  border-style: none;
+  border-radius: 24px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+  font-size: 2rem;
+  width: 38.561vh;
+  height: 8.741vh;
+  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in, color 0.15s ease-in;
+}
+input[type=submit]:hover {
+  transform: scale(1.05);
+  color: #7badd8;
+}
+input[type=submit]:active {
+  background-color: #1b4569;
+  transform: scale(0.905);
+}
+/* Body and main container */
+body {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 140px 77px 0px; /* padding-top for fixed navbar */
+  background: linear-gradient(to bottom, #324a5f, #405d76);
+}
+
+main {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

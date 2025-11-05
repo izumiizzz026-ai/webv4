@@ -1,0 +1,319 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Navbar styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 14.518vh;
+  background-color: #0c1821; /* Dark green */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+
+/* Header text moved left with bigger font */
+.nav-header {
+  padding-left: 18.4px;
+}
+/*Text for the navbar*/
+.luis,
+.qr {
+  text-align: left;
+  font-family: "DM Sans", sans-serif;
+  color: #ccc9dc;
+}
+.luis {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.qr {
+  display: block;
+  font-size: 1.25rem;
+  font-style: italic;
+}
+
+/*navbar button*/
+.create-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32.75vh;
+  height: 11.14vh;
+}
+.create-button {
+  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #0c1821;
+  background-color: #ccc9dc;
+  border-style: none;
+  border-radius: 34px;
+  width: 25.026vh;
+  height: 7.786vh;
+  transition: color 0.15s ease, transform 0.15s ease-out, background-color 0.15s ease-out;
+}
+.create-button:hover {
+  transform: scale(1.05);
+  color: black;
+}
+.create-button:active {
+  background-color: #a8a5b8;
+  transform: scale(0.905);
+}
+
+/*content text*/
+.text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90.859vh;
+  height: 66.146vh;
+}
+.this,
+.attend {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  color: #ccc9dc;
+}
+.attend {
+  font-family: "Playfair Display", serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-top: 130px;
+}
+.this {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.063rem;
+  font-style: italic;
+  margin-top: 210.5px;
+  width: 60.87vh;
+}
+
+/*Login box*/
+.login-container {
+  display: flex;
+  flex-direction: column;
+  width: 65.104vh;
+  height: 70.755vh;
+}
+
+/*login buttons*/
+.tc, .st {
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.667rem;
+  font-weight: bold;
+  border-style: none;
+  border-radius: 24px 24px 0px 0px;
+  width: 20.039vh;
+  height: 7.786vh;
+  cursor: pointer;
+  transition: padding 0.2s ease, text-decoration 0.5s ease-in;
+}
+.tc {
+  background-color: #7badd8;
+  color: #0c1821;
+}
+.st {
+  background-color: #0c1821;
+  color: #7badd8;
+}
+.tc:hover, .st:hover {
+  padding-top: 0.4vh;
+  padding-bottom: 1.2vh;
+  text-decoration: underline;
+}
+
+/*form for login*/
+.login-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #7badd8;
+  border-style: none;
+  border-radius: 0px 24px 24px 24px;
+  padding: 30px 0px 5px;
+  width: 65.104vh;
+  height: 65.755vh;
+}
+.login {
+  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+  font-size: 2.314rem;
+  color: #0c1821;
+}
+
+/*form style*/
+.submit-btn {
+  text-align: center;
+}
+label {
+  margin-left: 10px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 1.429rem;  
+}
+input[placeholder] {
+  font-style: italic;
+}
+input[type=text], input[type=password] {
+  font-family: "DM Sans", sans-serif;
+  background-color: #ccc9dc;
+  border-style: none;
+  border-radius: 12px;
+  padding-left: 10px;
+  font-size: 0.929rem;
+  width: 60.378vh;
+  height: 5.716vh;
+  margin-bottom: 5.638vh;
+  transition: background-color 0.15s ease-in;
+}
+input[type=text]:focus, input[type=password]:focus {
+  background-color:#b1aebf;
+}
+input[type=submit] {
+  background-color: #437eb1;
+  color: #0c1821;
+  border-style: none;
+  border-radius: 24px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.714rem;
+  width: 30.495vh;
+  height: 8.164vh;
+  transition: transform 0.15s ease-in-out, background-color 0.15s ease-in, color 0.15s ease;
+}
+input[type=submit]:hover {
+  transform: scale(1.05);
+  background-color: #0c1821;
+  color: #437eb1;
+}
+input[type=submit]:active {
+  background-color: #080f14;
+  color: #0e1c29;
+  transform: scale(0.905);
+}
+
+/* Hamburger button hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.hamburger .bar {
+  height: 3px;
+  width: 75%;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Body and main container */
+body {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 100px 77px 30px; /* padding-top for fixed navbar */
+  background: linear-gradient(to bottom, #324a5f, #111927);
+}
+
+main {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  /* Show hamburger */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Hide desktop menu by default */
+  .navbar-menu {
+    position: fixed;
+    top: 103px;
+    right: 0;
+    background-color: #1b4d1b;
+    flex-direction: column;
+    width: 200px;
+    padding: 15px 20px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    border-radius: 0 0 0 8px;
+  }
+
+  /* Show menu when active */
+  .navbar-menu.active {
+    transform: translateX(0);
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropbtn {
+    width: 100%;
+    text-align: left;
+    padding: 12px 10px;
+    font-size: 1.1rem;
+    border-radius: 4px;
+  }
+
+  .dropdown-content {
+    position: relative;
+    top: 0;
+    left: 0;
+    box-shadow: none;
+    border-radius: 0 0 4px 4px;
+    width: 100%;
+  }
+
+  .dropdown-content a {
+    padding-left: 25px;
+  }
+
+  body {
+    padding-top: 70px; /* Adjust padding for smaller navbar */
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  button {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}

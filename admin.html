@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 14.518vh;
+            background-color: #0c1821;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .nav-header {
+            padding-left: 18.4px;
+        }
+
+        .luis, .qr {
+            text-align: left;
+            font-family: "DM Sans", sans-serif;
+            color: #ccc9dc;
+        }
+
+        .luis {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .qr {
+            display: block;
+            font-size: 1.25rem;
+            font-style: italic;
+        }
+
+        .create-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32.75vh;
+            height: 11.14vh;
+        }
+
+        .create-button {
+            font-family: "DM Sans", sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #0c1821;
+            background-color: #ccc9dc;
+            border-style: none;
+            border-radius: 34px;
+            width: 25.026vh;
+            height: 7.786vh;
+            transition: color 0.15s ease, transform 0.15s ease-out, background-color 0.15s ease-out;
+        }
+
+        .create-button:hover {
+            transform: scale(1.05);
+            color: black;
+        }
+
+        .create-button:active {
+            background-color: #a8a5b8;
+            transform: scale(0.905);
+        }
+
+        /* Side Navbar */
+        .side-navbar {
+            position: fixed;
+            top: 14.518vh; /* Below main navbar */
+            left: 0;
+            width: 250px;
+            height: calc(100vh - 14.518vh);
+            background-color: #1b4d1b;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            z-index: 999;
+        }
+
+        .side-navbar a {
+            color: #ccc9dc;
+            text-decoration: none;
+            font-family: "DM Sans", sans-serif;
+            font-size: 1.1rem;
+            padding: 15px 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .side-navbar a:hover {
+            background-color: #324a5f;
+        }
+
+        .side-navbar a.active {
+            background-color: #437fb2;
+            color: #0c1821;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px; /* Space for side navbar */
+            margin-top: 14.518vh; /* Below main navbar */
+            padding: 20px;
+            min-height: calc(100vh - 14.518vh);
+            background: linear-gradient(to bottom, #324a5f, #111927);
+            color: #ccc9dc;
+            font-family: "DM Sans", sans-serif;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Create Teacher Form */
+        .create-teacher {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .create-teacher h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 2.5rem;
+            color: #ccc9dc;
+            margin-bottom: 20px;
+        }
+
+        .create-teacher label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .create-teacher input[type="text"],
+        .create-teacher input[type="email"],
+        .create-teacher input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #ccc9dc;
+            font-family: "DM Sans", sans-serif;
+            font-size: 1rem;
+            transition: background-color 0.15s ease-in;
+        }
+
+        .create-teacher input:focus {
+            background-color: #b1aebf;
+        }
+
+        .create-teacher button {
+            background-color: #437fb2;
+            color: #0c1821;
+            border: none;
+            border-radius: 24px;
+            font-family: "DM Sans", sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: transform 0.15s ease-in-out, background-color 0.15s ease-in;
+        }
+
+        .create-teacher button:hover {
+            transform: scale(1.05);
+        }
+
+        .create-teacher button:active {
+            background-color: #1b4569;
+            transform: scale(0.905);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            max-width: 100%;
+        }
+
+        .dashboard h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 2.5rem;
+            color: #ccc9dc;
+            margin-bottom: 20px;
+        }
+
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #7badd8;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .student-table th,
+        .student-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ccc9dc;
+        }
+
+        .student-table th {
+            background-color: #437fb2;
+            color: #0c1821;
+            font-weight: bold;
+        }
+
+        .student-table tr:hover {
+            background-color: #a8a5b8;
+        }
+
+        /* Edit Panel */
+        .edit-panel {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .edit-panel h2 {
+            font-family: "Playfair Display", serif;
+            font-size: 2.5rem;
+            color: #ccc9dc;
+            margin-bottom: 20px;
+        }
+
+        .edit-panel select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #ccc9dc;
+            font-family: "DM Sans", sans-serif;
+            font-size: 1rem;
+        }
+
+        .edit-panel label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .edit-panel input[type="text"],
+        .edit-panel input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #ccc9dc;
+            font-family: "DM Sans", sans-serif;
+            font-size: 1rem;
+            transition: background-color 0.15s ease-in;
+        }
+
+        .edit-panel input:focus {
+            background-color: #b1aebf;
+        }
+
+        .edit-panel button {
+            background-color: #437fb2;
+            color: #0c1821;
+            border: none;
+            border-radius: 24px;
+            font-family: "DM Sans", sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            padding: 15px 30px;
+            cursor: pointer;
+            transition: transform 0.15s ease-in-out, background-color 0.15s ease-in;
+            margin-right: 10px;
+        }
+
+        .edit-panel button:hover {
+            transform: scale(1.05);
+        }
+
+        .edit-panel button:active {
+            background-color: #1b4569;
+            transform: scale(0.905);
+        }
+
+        /* Hamburger for mobile */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 25px;
+            height: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .hamburger .bar {
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .side-navbar {
+                width: 200px;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .side-navbar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .hamburger {
+                display: flex;
+                margin-right: 20px;
+            }
+
+            .navbar {
+                height: 10vh; /* Adjust for mobile */
+            }
+
+            .luis {
+                font-size: 1.2rem;
+            }
+
+            .qr {
+                font-size: 1rem;
+            }
+
+            .create-container {
+                width: auto;
+            }
+
+            .create-button {
+                width: 150px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                margin-top: 10vh;
+                padding: 10px;
+            }
+
+            .student-table {
+                font-size: 0.9rem;
+            }
+
+            .student-table th,
+            .student-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Navbar -->
+    <nav class="navbar">
+        <div class="nav-header">
+            <span class="luis">Admin Panel</span>
+            <span class="qr">Management System</span>
+        </div>
+        <button class="hamburger" id="hamburger">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </button>
+        <div class="create-container">
+            <button class="create-button">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Side Navbar -->
+    <nav class="side-navbar" id="side-navbar">
+        <a href="#" class="nav-link active" data-section="create-teacher">Create Teacher</a>
+        <a href="#" class="nav-link" data-section="dashboard">Dashboard</a>
+        <a href="#" class="nav-link" data-section="edit-panel">Edit Student</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Create Teacher Section -->
+        <div id="create-teacher" class="content-section active">
+            <div class="create-teacher">
+                <h2>Create Teacher Account</h2>
+                <form id="teacher-form">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" required>
+
+                    <label for="gmail">Gmail</label>
+                    <input type="email" id="gmail" name="gmail" required>
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+
+                    <button type="submit">Create Account</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section">
+            <div class="dashboard">
+                <h2>Student Records</h2>
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Section</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-records">
+                        <!-- Records will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Edit Panel Section -->
+        <div id="edit-panel" class="content-section">
+            <div class="edit-panel">
+                <h2>Edit Student Record</h2>
+                <select id="student-select">
+                    <option value="">Select a Student</option>
+                    <!-- Options will be populated by JS -->
+                </select>
+                <form id="edit-form" style="display: none;">
+                    <label for="edit-name">Name</label>
+                    <input type="text" id="edit-name" name="name" required>
+
+                    <label for="edit-email">Email</label>
+                    <input type="email" id="edit-email" name="email" required>
+
+                    <label for="edit-section">Section</label>
+                    <input type="text" id="edit-section" name="section" required>
+
+                    <button type="submit">Update Record</button>
+                    <button type="button" id="delete-btn">Delete Record</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for students (simulating database)
+        let students = JSON.parse(localStorage.getItem('students')) || [
+            { id: 1, name: 'John Doe', email: 'john@example.com', section: 'A' },
+            { id: 2, name: 'Jane Smith', email: 'jane@example.com', section: 'B' },
+            { id: 3, name: 'Alice Johnson', email: 'dismaya@example.com', section: 'A' }
+            
+        ];
+
+        // Save to localStorage
+        function saveStudents() {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+
+        // Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.target.getAttribute('data-section');
+
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(s => s.classList.remove('active'));
+
+                // Add active class to clicked link and corresponding section
+                e.target.classList.add('active');
+                document.getElementById(section).classList.add('active');
+            });
+        });
+
+        // Hamburger menu for mobile
+        const hamburger = document.getElementById('hamburger');
+        const sideNavbar = document.getElementById('side-navbar');
+
+        hamburger.addEventListener('click', () => {
+            sideNavbar.classList.toggle('active');
+        });
+
+        // Create Teacher Form
+        const teacherForm = document.getElementById('teacher-form');
+        teacherForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullname = document.getElementById('fullname').value;
+            const gmail = document.getElementById('gmail').value;
+            const password = document.getElementById('password').value;
+
+            // In a real app, send to backend. Here, just alert.
+            alert(`Teacher account created: ${fullname}, ${gmail}`);
+            teacherForm.reset();
+        });
+
+        // Populate Dashboard
+        function populateDashboard() {
+            const tbody = document.getElementById('student-records');
+            tbody.innerHTML = '';
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.section}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Populate Edit Select
+        function populateEditSelect() {
+            const select = document.getElementById('student-select');
+            select.innerHTML = '<option value="">Select a Student</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.email})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Edit Form Logic
+        const studentSelect = document.getElementById('student-select');
+        const editForm = document.getElementById('edit-form');
+        const editName = document.getElementById('edit-name');
+        const editEmail = document.getElementById('edit-email');
+        const editSection = document.getElementById('edit-section');
+        const deleteBtn = document.getElementById('delete-btn');
+
+        studentSelect.addEventListener('change', () => {
+            const id = parseInt(studentSelect.value);
+            const student = students.find(s => s.id === id);
+            if (student) {
+                editName.value = student.name;
+                editEmail.value = student.email;
+                editSection.value = student.section;
+                editForm.style.display = 'block';
+            } else {
+                editForm.style.display = 'none';
+            }
+        });
+
+        editForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const id = parseInt(studentSelect.value);
+            const student = students.find(s => s.id === id);
+            if (student) {
+                student.name = editName.value;
+                student.email = editEmail.value;
+                student.section = editSection.value;
+                saveStudents();
+                populateDashboard();
+                populateEditSelect();
+                alert('Record updated!');
+            }
+        });
+
+        deleteBtn.addEventListener('click', () => {
+            const id = parseInt(studentSelect.value);
+            students = students.filter(s => s.id !== id);
+            saveStudents();
+            populateDashboard();
+            populateEditSelect();
+            editForm.style.display = 'none';
+            alert('Record deleted!');
+        });
+
+        // Initialize
+        populateDashboard();
+        populateEditSelect();
+    </script>
+</body>
+</html>
