@@ -94,6 +94,32 @@ window.addEventListener('resize', () => {
         <input type="password" placeholder="******" id="pwd" name="password" required><br>
         <label for="cpwd">Confirm Password:</label><br>
         <input type="password" placeholder="********" id="cpwd" name="confirm_password" required><br>
+        
+        <label for="grade_level">Grade Level:</label><br>
+        <select id="grade_level" name="grade_level" required>
+          <option value="">Select Grade Level</option>
+          <option value="11">Grade 11</option>
+          <option value="12">Grade 12</option>
+        </select><br>
+        
+        <label for="section">Section:</label><br>
+        <select id="section" name="section" required>
+          <option value="">Select your section</option>
+          <!-- Sections will be populated by JavaScript -->
+        </select><br>
+        
+        <hr style="margin: 20px 0; border-color: #437fb2;">
+        <p style="color: #ccc9dc; font-size: 0.9rem; margin-bottom: 10px;">Guardian Information (for attendance notifications)</p>
+        
+        <label for="guardian_name">Guardian Name:</label><br>
+        <input type="text" placeholder="Parent/Guardian Name" id="guardian_name" name="guardian_name"><br>
+        
+        <label for="guardian_email">Guardian Email:</label><br>
+        <input type="email" placeholder="guardian@email.com" id="guardian_email" name="guardian_email"><br>
+        
+        <label for="guardian_phone">Guardian Phone (optional):</label><br>
+        <input type="tel" placeholder="09XXXXXXXXX" id="guardian_phone" name="guardian_phone"><br>
+        
         <div class="submit-btn">
           <input type="submit" value="Create Account">
         </div>
@@ -152,6 +178,56 @@ window.addEventListener('resize', () => {
 });
 </script>
 <script>
+  // Store available sections
+  let availableSections = [];
+
+  // Load available sections on page load
+  async function loadSections() {
+    try {
+      const response = await fetch('/api/sections');
+      const result = await response.json();
+      
+      if (result.success) {
+        availableSections = result.sections;
+        updateSectionDropdown();
+      }
+    } catch (error) {
+      console.error('Error loading sections:', error);
+    }
+  }
+
+  // Update section dropdown based on selected grade level
+  function updateSectionDropdown() {
+    const gradeLevel = document.getElementById('grade_level').value;
+    const sectionSelect = document.getElementById('section');
+    
+    // Clear current options
+    sectionSelect.innerHTML = '<option value="">Select your section</option>';
+    
+    if (!gradeLevel) return;
+    
+    // Filter sections by grade level
+    const filteredSections = availableSections.filter(s => s.grade_level === gradeLevel);
+    
+    if (filteredSections.length === 0) {
+      sectionSelect.innerHTML = '<option value="">No sections available for Grade ' + gradeLevel + '</option>';
+      return;
+    }
+    
+    filteredSections.forEach(s => {
+      const option = document.createElement('option');
+      option.value = s.section;
+      option.textContent = `${s.section} (Teacher: ${s.teacher_name})`;
+      sectionSelect.appendChild(option);
+    });
+  }
+
+  // Listen for grade level change
+  document.getElementById('grade_level').addEventListener('change', updateSectionDropdown);
+
+  // Load sections when page loads
+  document.addEventListener('DOMContentLoaded', loadSections);
+
   // Form submission
   document.getElementById('student-signup-form').addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -160,12 +236,19 @@ window.addEventListener('resize', () => {
     const email = form['email'].value.trim();
     const password = form['password'].value;
     const confirmPassword = form['confirm_password'].value;
+    const gradeLevel = form['grade_level'].value;
+    const section = form['section'].value;
+    const guardianName = form['guardian_name'].value.trim();
+    const guardianEmail = form['guardian_email'].value.trim();
+    const guardianPhone = form['guardian_phone'].value.trim();
     
     const missingFields = [];
     if (!fullName) missingFields.push('Full Name');
     if (!email) missingFields.push('Email');
     if (!password) missingFields.push('Password');
     if (!confirmPassword) missingFields.push('Confirm Password');
+    if (!gradeLevel) missingFields.push('Grade Level');
+    if (!section) missingFields.push('Section');
     
     if (missingFields.length > 0) {
       alert('The following fields are required: ' + missingFields.join(', ') + '.');
@@ -181,15 +264,18 @@ window.addEventListener('resize', () => {
       full_name: fullName,
       email: email,
       password: password,
-      confirm_password: confirmPassword
+      confirm_password: confirmPassword,
+      grade_level: gradeLevel,
+      section: section,
+      guardian_name: guardianName,
+      guardian_email: guardianEmail,
+      guardian_phone: guardianPhone
     };
 
     try {
       const response = await fetch('/api/signup', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
 

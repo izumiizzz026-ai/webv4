@@ -264,7 +264,7 @@ main {
     position: fixed;
     top: 103px;
     right: 0;
-    background-color: #1b4d1b;
+    background-color: linear-gradient(#3757c0, darkblue);
     flex-direction: column;
     width: 200px;
     padding: 15px 20px;
@@ -316,4 +316,45 @@ main {
     padding: 12px 20px;
     font-size: 0.9rem;
   }
+}
+
+/* Tablet and landscape phones */
+@media (max-width: 1024px) {
+  .navbar { height: 11vh; }
+
+  /* Make header and controls fluid */
+  .create-container { width: auto; height: auto; }
+  .create-button { width: 160px; height: 42px; font-size: 0.95rem; }
+
+  .text-container { width: 90%; height: auto; padding: 40px 10px; }
+  .attend { font-size: 2rem; margin-top: 100px; }
+  .this { font-size: 1rem; margin-top: 120px; width: 80%; }
+
+  .login-container { width: 90%; height: auto; }
+  .tc, .st { width: 48%; font-size: 1.25rem; }
+  .login-cell { width: 100%; height: auto; padding: 20px; }
+  input[type=text], input[type=password] { width: 92%; }
+  input[type=submit] { width: 45%; }
+
+  body { padding: 90px 20px 30px; }
+}
+
+/* Small screens - stack layout vertically and scale controls */
+@media (max-width: 480px) {
+  .create-button { width: 140px; height: 40px; font-size: 0.9rem; }
+  .luis { font-size: 1.1rem; }
+  .qr { font-size: 0.95rem; }
+
+  .text-container { width: 95%; height: auto; margin-top: 60px; }
+  .attend { font-size: 1.6rem; margin-top: 60px; }
+  .this { font-size: 0.95rem; margin-top: 80px; width: 95%; }
+
+  .login-container { width: 95%; margin: 20px auto; }
+  .login-cell { width: 100%; padding: 20px; border-radius: 12px; }
+  .tc, .st { width: 48%; font-size: 1rem; }
+
+  input[type=text], input[type=password] { width: 100%; height: 48px; font-size: 0.95rem; }
+  input[type=submit] { width: 100%; height: 52px; font-size: 1.1rem; }
+
+  body { padding-top: 80px; padding-left: 12px; padding-right: 12px; }
 }

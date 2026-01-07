@@ -5,384 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <style>
-        /* Basic reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Navbar styles */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 14.518vh;
-            background-color: #0c1821;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-
-        .nav-header {
-            padding-left: 18.4px;
-        }
-
-        .luis, .qr {
-            text-align: left;
-            font-family: "DM Sans", sans-serif;
-            color: #ccc9dc;
-        }
-
-        .luis {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .qr {
-            display: block;
-            font-size: 1.25rem;
-            font-style: italic;
-        }
-
-        .create-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32.75vh;
-            height: 11.14vh;
-        }
-
-        .create-button {
-            font-family: "DM Sans", sans-serif;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            color: #0c1821;
-            background-color: #ccc9dc;
-            border-style: none;
-            border-radius: 34px;
-            width: 25.026vh;
-            height: 7.786vh;
-            transition: color 0.15s ease, transform 0.15s ease-out, background-color 0.15s ease-out;
-        }
-
-        .create-button:hover {
-            transform: scale(1.05);
-            color: black;
-        }
-
-        .create-button:active {
-            background-color: #a8a5b8;
-            transform: scale(0.905);
-        }
-
-        /* Side Navbar */
-        .side-navbar {
-            position: fixed;
-            top: 14.518vh; /* Below main navbar */
-            left: 0;
-            width: 250px;
-            height: calc(100vh - 14.518vh);
-            background-color: #1b4d1b;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
-            z-index: 999;
-        }
-
-        .side-navbar a {
-            color: #ccc9dc;
-            text-decoration: none;
-            font-family: "DM Sans", sans-serif;
-            font-size: 1.1rem;
-            padding: 15px 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-
-        .side-navbar a:hover {
-            background-color: #324a5f;
-        }
-
-        .side-navbar a.active {
-            background-color: #437fb2;
-            color: #0c1821;
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 250px; /* Space for side navbar */
-            margin-top: 14.518vh; /* Below main navbar */
-            padding: 20px;
-            min-height: calc(100vh - 14.518vh);
-            background: linear-gradient(to bottom, #324a5f, #111927);
-            color: #ccc9dc;
-            font-family: "DM Sans", sans-serif;
-        }
-
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        /* Create Teacher Form */
-        .create-teacher {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .create-teacher h2 {
-            font-family: "Playfair Display", serif;
-            font-size: 2.5rem;
-            color: #ccc9dc;
-            margin-bottom: 20px;
-        }
-
-        .create-teacher label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        .create-teacher input[type="text"],
-        .create-teacher input[type="email"],
-        .create-teacher input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: none;
-            border-radius: 12px;
-            background-color: #ccc9dc;
-            font-family: "DM Sans", sans-serif;
-            font-size: 1rem;
-            transition: background-color 0.15s ease-in;
-        }
-
-        .create-teacher input:focus {
-            background-color: #b1aebf;
-        }
-
-        .create-teacher button {
-            background-color: #437fb2;
-            color: #0c1821;
-            border: none;
-            border-radius: 24px;
-            font-family: "DM Sans", sans-serif;
-            font-weight: bold;
-            font-size: 1.5rem;
-            padding: 15px 30px;
-            cursor: pointer;
-            transition: transform 0.15s ease-in-out, background-color 0.15s ease-in;
-        }
-
-        .create-teacher button:hover {
-            transform: scale(1.05);
-        }
-
-        .create-teacher button:active {
-            background-color: #1b4569;
-            transform: scale(0.905);
-        }
-
-        /* Dashboard */
-        .dashboard {
-            max-width: 100%;
-        }
-
-        .dashboard h2 {
-            font-family: "Playfair Display", serif;
-            font-size: 2.5rem;
-            color: #ccc9dc;
-            margin-bottom: 20px;
-        }
-
-        .student-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #7badd8;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .student-table th,
-        .student-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ccc9dc;
-        }
-
-        .student-table th {
-            background-color: #437fb2;
-            color: #0c1821;
-            font-weight: bold;
-        }
-
-        .student-table tr:hover {
-            background-color: #a8a5b8;
-        }
-
-        /* Edit Panel */
-        .edit-panel {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .edit-panel h2 {
-            font-family: "Playfair Display", serif;
-            font-size: 2.5rem;
-            color: #ccc9dc;
-            margin-bottom: 20px;
-        }
-
-        .edit-panel select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: none;
-            border-radius: 12px;
-            background-color: #ccc9dc;
-            font-family: "DM Sans", sans-serif;
-            font-size: 1rem;
-        }
-
-        .edit-panel label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-        }
-
-        .edit-panel input[type="text"],
-        .edit-panel input[type="email"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: none;
-            border-radius: 12px;
-            background-color: #ccc9dc;
-            font-family: "DM Sans", sans-serif;
-            font-size: 1rem;
-            transition: background-color 0.15s ease-in;
-        }
-
-        .edit-panel input:focus {
-            background-color: #b1aebf;
-        }
-
-        .edit-panel button {
-            background-color: #437fb2;
-            color: #0c1821;
-            border: none;
-            border-radius: 24px;
-            font-family: "DM Sans", sans-serif;
-            font-weight: bold;
-            font-size: 1.5rem;
-            padding: 15px 30px;
-            cursor: pointer;
-            transition: transform 0.15s ease-in-out, background-color 0.15s ease-in;
-            margin-right: 10px;
-        }
-
-        .edit-panel button:hover {
-            transform: scale(1.05);
-        }
-
-        .edit-panel button:active {
-            background-color: #1b4569;
-            transform: scale(0.905);
-        }
-
-        /* Hamburger for mobile */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 25px;
-            height: 20px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .hamburger .bar {
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .side-navbar {
-                width: 200px;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .side-navbar.active {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .hamburger {
-                display: flex;
-                margin-right: 20px;
-            }
-
-            .navbar {
-                height: 10vh; /* Adjust for mobile */
-            }
-
-            .luis {
-                font-size: 1.2rem;
-            }
-
-            .qr {
-                font-size: 1rem;
-            }
-
-            .create-container {
-                width: auto;
-            }
-
-            .create-button {
-                width: 150px;
-                height: 40px;
-                font-size: 0.9rem;
-            }
-
-            .main-content {
-                margin-top: 10vh;
-                padding: 10px;
-            }
-
-            .student-table {
-                font-size: 0.9rem;
-            }
-
-            .student-table th,
-            .student-table td {
-                padding: 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="CSS/stuff.css">
+    <link rel="stylesheet" href="CSS/pages.css">
+    <script defer src="JS/mobile-nav.js"></script>
 </head>
 <body>
     <!-- Main Navbar -->
@@ -397,7 +22,7 @@
             <div class="bar"></div>
         </button>
         <div class="create-container">
-            <button class="create-button">Logout</button>
+            <button class="create-button" id="logout-btn">Logout</button>
         </div>
     </nav>
 
@@ -405,34 +30,55 @@
     <nav class="side-navbar" id="side-navbar">
         <a href="#" class="nav-link active" data-section="create-teacher">Create Teacher</a>
         <a href="#" class="nav-link" data-section="dashboard">Dashboard</a>
+        <a href="#" class="nav-link" data-section="attendance-stats">Attendance Stats</a>
+        <a href="#" class="nav-link" data-section="time-config">Time Settings</a>
         <a href="#" class="nav-link" data-section="edit-panel">Edit Student</a>
+        <a href="#" class="nav-link" data-section="db-manager">Database Manager</a>
     </nav>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Create Teacher Section -->
         <div id="create-teacher" class="content-section active">
-            <div class="create-teacher">
-                <h2>Create Teacher Account</h2>
-                <form id="teacher-form">
+            <h2>Create Teacher Account</h2>
+            <form id="teacher-form" class="admin-form">
+                <div class="form-group">
                     <label for="fullname">Full Name</label>
                     <input type="text" id="fullname" name="fullname" required>
+                </div>
 
+                <div class="form-group">
                     <label for="gmail">Gmail</label>
                     <input type="email" id="gmail" name="gmail" required>
+                </div>
 
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" required>
+                </div>
 
-                    <button type="submit">Create Account</button>
-                </form>
-            </div>
+                <div class="form-group">
+                    <label for="grade_level">Grade Level</label>
+                    <select id="grade_level" name="grade_level" required>
+                        <option value="">Select Grade Level</option>
+                        <option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="section">Section Name</label>
+                    <input type="text" id="section" name="section" placeholder="e.g., STEM-A, ABM-1, HUMSS-B" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Teacher Account</button>
+            </form>
         </div>
 
         <!-- Dashboard Section -->
         <div id="dashboard" class="content-section">
-            <div class="dashboard">
-                <h2>Student Records</h2>
+            <h2>Student Records</h2>
+            <div class="table-wrapper">
                 <table class="student-table">
                     <thead>
                         <tr>
@@ -440,6 +86,7 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Section</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="student-records">
@@ -451,26 +98,284 @@
 
         <!-- Edit Panel Section -->
         <div id="edit-panel" class="content-section">
-            <div class="edit-panel">
-                <h2>Edit Student Record</h2>
+            <h2>Edit Student Record</h2>
+            <div class="form-group">
+                <label for="student-select">Select Student</label>
                 <select id="student-select">
                     <option value="">Select a Student</option>
                     <!-- Options will be populated by JS -->
                 </select>
-                <form id="edit-form" style="display: none;">
+            </div>
+            <form id="edit-form" class="admin-form" style="display: none;">
+                <div class="form-group">
                     <label for="edit-name">Name</label>
                     <input type="text" id="edit-name" name="name" required>
+                </div>
 
+                <div class="form-group">
                     <label for="edit-email">Email</label>
                     <input type="email" id="edit-email" name="email" required>
+                </div>
 
+                <div class="form-group">
                     <label for="edit-section">Section</label>
                     <input type="text" id="edit-section" name="section" required>
+                </div>
 
-                    <button type="submit">Update Record</button>
-                    <button type="button" id="delete-btn">Delete Record</button>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">Update Record</button>
+                    <button type="button" id="delete-btn" class="delete-btn">Delete Record</button>
+                </div>
+            </form>
+        </div>
 
-                </form>
+        <!-- Attendance Stats Section (Dashboard with graphs) -->
+        <div id="attendance-stats" class="content-section">
+            <h2>Attendance Statistics</h2>
+            <p style="color:#666; margin-bottom: 20px;">Today's attendance overview for all sections</p>
+            
+            <!-- Status Summary Cards -->
+            <div class="stats-container" id="attendance-summary">
+                <div class="stat-card stat-total">
+                    <div class="stat-value" id="total-students">0</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-card stat-present">
+                    <div class="stat-value" id="total-present">0</div>
+                    <div class="stat-label">✓ Present</div>
+                </div>
+                <div class="stat-card stat-absent">
+                    <div class="stat-value" id="total-absent">0</div>
+                    <div class="stat-label">✗ Absent</div>
+                </div>
+                <div class="stat-card stat-late">
+                    <div class="stat-value" id="total-late">0</div>
+                    <div class="stat-label">⏱ Late</div>
+                </div>
+                <div class="stat-card stat-cutting">
+                    <div class="stat-value" id="total-cutting">0</div>
+                    <div class="stat-label">⚠ Cutting</div>
+                </div>
+            </div>
+            
+            <!-- Status Bar Chart -->
+            <div class="chart-container" style="margin: 30px 0;">
+                <h3>Status Distribution</h3>
+                <div id="status-chart" class="bar-chart">
+                    <!-- Chart will be rendered here -->
+                </div>
+            </div>
+            
+            <!-- Per-Section Breakdown -->
+            <div class="section-breakdown">
+                <h3>Breakdown by Section</h3>
+                <div id="section-stats-container" class="table-wrapper">
+                    <table class="student-table">
+                        <thead>
+                            <tr>
+                                <th>Section</th>
+                                <th>Total</th>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Late</th>
+                                <th>Cutting</th>
+                            </tr>
+                        </thead>
+                        <tbody id="section-stats-tbody">
+                            <!-- Stats will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Auto-Mark Button -->
+            <div style="margin-top: 30px; text-align: center;">
+                <button id="auto-mark-btn" class="submit-btn" style="background: #e53e3e;">
+                    🔄 Run Auto-Mark (Absent/Cutting)
+                </button>
+                <p style="color:#666; font-size: 12px; margin-top: 10px;">
+                    This will mark students as ABSENT if not checked in, or CUTTING if not checked out
+                </p>
+            </div>
+        </div>
+
+        <!-- Time Configuration Section -->
+        <div id="time-config" class="content-section">
+            <h2>Attendance Time Settings</h2>
+            <p style="color:#666; margin-bottom: 20px;">Configure check-in/check-out times and notification settings</p>
+            
+            <form id="time-config-form" class="admin-form">
+                <h3 style="margin-bottom: 15px;">Check-in Times</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="check-in-start">Check-in Start Time</label>
+                        <input type="time" id="check-in-start" name="check_in_start_time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="check-in-end">Check-in End Time (Late After)</label>
+                        <input type="time" id="check-in-end" name="check_in_end_time" required>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px;">Check-out Times</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="check-out-start">Check-out Start Time</label>
+                        <input type="time" id="check-out-start" name="check_out_start_time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="check-out-end">Check-out End Time (Cutting After)</label>
+                        <input type="time" id="check-out-end" name="check_out_end_time" required>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px;">Auto-Mark Settings</h3>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="auto-absent" name="auto_mark_absent_enabled" checked>
+                        Auto-mark students as ABSENT if not checked in by deadline
+                    </label>
+                </div>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="auto-cutting" name="auto_mark_cutting_enabled" checked>
+                        Auto-mark students as CUTTING if not checked out by deadline
+                    </label>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px;">Email Notification Settings</h3>
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="email-enabled" name="email_notifications_enabled" checked>
+                        Enable email notifications to guardians
+                    </label>
+                </div>
+                <div class="form-group checkbox-group" style="margin-left: 20px;">
+                    <label><input type="checkbox" id="notify-present" name="notify_on_present" checked> Notify on PRESENT</label>
+                </div>
+                <div class="form-group checkbox-group" style="margin-left: 20px;">
+                    <label><input type="checkbox" id="notify-absent" name="notify_on_absent" checked> Notify on ABSENT</label>
+                </div>
+                <div class="form-group checkbox-group" style="margin-left: 20px;">
+                    <label><input type="checkbox" id="notify-late" name="notify_on_late" checked> Notify on LATE</label>
+                </div>
+                <div class="form-group checkbox-group" style="margin-left: 20px;">
+                    <label><input type="checkbox" id="notify-cutting" name="notify_on_cutting" checked> Notify on CUTTING</label>
+                </div>
+                
+                <h3 style="margin: 25px 0 15px;">📧 Gmail SMTP Settings</h3>
+                <p style="color:#888; font-size: 0.9rem; margin-bottom: 15px;">
+                    Configure email sending. Get your App Password from: 
+                    <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:#7badd8;">Google App Passwords</a>
+                </p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smtp-email">Gmail Address</label>
+                        <input type="email" id="smtp-email" name="smtp_email" placeholder="yourname@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtp-password">Gmail App Password (16 characters)</label>
+                        <input type="password" id="smtp-password" name="smtp_password" placeholder="xxxx xxxx xxxx xxxx">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smtp-server">SMTP Server</label>
+                        <input type="text" id="smtp-server" name="smtp_server" value="smtp.gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="smtp-port">SMTP Port</label>
+                        <input type="number" id="smtp-port" name="smtp_port" value="587">
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+                    <button type="submit" class="submit-btn">Save Configuration</button>
+                    <button type="button" id="test-email-btn" class="submit-btn" style="background: #48bb78;">📧 Send Test Email</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Database Manager Section -->
+        <div id="db-manager" class="content-section">
+            <h2>Database Manager</h2>
+            
+            <!-- DB Stats -->
+            <div id="db-stats" class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-students">0</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-teachers">0</div>
+                    <div class="stat-label">Teachers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-attendance">0</div>
+                    <div class="stat-label">Attendance Records</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="db-tab active" data-tab="students-table">Students</button>
+                <button class="db-tab" data-tab="teachers-table">Teachers</button>
+                <button class="db-tab" data-tab="attendance-table">Attendance</button>
+            </div>
+
+            <!-- Students Table -->
+            <div id="students-table" class="db-table-container" style="display:block;">
+                <table class="student-table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Section</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="db-students-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Teachers Table -->
+            <div id="teachers-table" class="db-table-container" style="display:none;">
+                <table class="student-table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Grade</th>
+                            <th>Section</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="db-teachers-tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Attendance Table -->
+            <div id="attendance-table" class="db-table-container" style="display:none;">
+                <div class="filter-container">
+                    <input type="date" id="attendance-date-filter" placeholder="Filter by date">
+                    <button id="attendance-filter-btn" class="filter-btn">Filter</button>
+                </div>
+                <table class="student-table" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>Student Name</th>
+                            <th>Student Email</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="db-attendance-tbody"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -505,6 +410,23 @@
             sideNavbar.classList.toggle('active');
         });
 
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = result.redirect || '/';
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        });
+
         // Create Teacher Form
         const teacherForm = document.getElementById('teacher-form');
         teacherForm.addEventListener('submit', async (e) => {
@@ -512,17 +434,28 @@
             const fullname = document.getElementById('fullname').value;
             const gmail = document.getElementById('gmail').value;
             const password = document.getElementById('password').value;
+            const grade_level = document.getElementById('grade_level').value;
+            const section = document.getElementById('section').value;
+
+            if (!grade_level) {
+                alert('Please select a grade level');
+                return;
+            }
+            if (!section) {
+                alert('Please enter a section name');
+                return;
+            }
 
             try {
                 const response = await fetch('/api/admin/create-teacher', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fullname, gmail, password })
+                    body: JSON.stringify({ fullname, gmail, password, grade_level, section })
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    alert(`Teacher account created: ${fullname}`);
+                    alert(`Teacher account created: ${fullname}\nAssigned to: Grade ${grade_level} - ${section}`);
                     teacherForm.reset();
                 } else {
                     alert(result.error || 'Failed to create teacher account');
@@ -543,16 +476,39 @@
                     students = result.students;
                     const tbody = document.getElementById('student-records');
                     tbody.innerHTML = '';
-                    students.forEach(student => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${student.id}</td>
-                            <td>${student.name}</td>
-                            <td>${student.email}</td>
-                            <td>-</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
+                    
+                    // Get status for each student
+                    for (const student of students) {
+                        try {
+                            const statusResponse = await fetch(`/api/student/${student.id}/status`);
+                            const statusResult = await statusResponse.json();
+                            
+                            const row = document.createElement('tr');
+                            const status = statusResult.success ? 
+                                (statusResult.current_status === 'checked_in' ? 'Checked In' : 'Checked Out') : 
+                                'Unknown';
+                            
+                            row.innerHTML = `
+                                <td>${student.id}</td>
+                                <td>${student.name}</td>
+                                <td>${student.email}</td>
+                                <td>${student.section || '-'}</td>
+                                <td>${status}</td>
+                            `;
+                            tbody.appendChild(row);
+                        } catch (err) {
+                            console.error(`Error getting status for student ${student.id}:`, err);
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${student.id}</td>
+                                <td>${student.name}</td>
+                                <td>${student.email}</td>
+                                <td>${student.section || '-'}</td>
+                                <td>Unknown</td>
+                            `;
+                            tbody.appendChild(row);
+                        }
+                    }
                 }
             } catch (error) {
                 console.error('Error loading students:', error);
@@ -585,7 +541,7 @@
             if (student) {
                 editName.value = student.name;
                 editEmail.value = student.email;
-                editSection.value = student.section;
+                editSection.value = student.section || '';
                 editForm.style.display = 'block';
             } else {
                 editForm.style.display = 'none';
@@ -602,7 +558,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         name: editName.value,
-                        email: editEmail.value
+                        email: editEmail.value,
+                        section: editSection.value
                     })
                 });
 
@@ -647,6 +604,460 @@
         // Initialize
         populateDashboard();
         populateEditSelect();
+
+        // ===== DB MANAGER LOGIC =====
+        const dbTabs = document.querySelectorAll('.db-tab');
+        const dbTableContainers = document.querySelectorAll('.db-table-container');
+
+        // Tab switching
+        dbTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tabName = tab.getAttribute('data-tab');
+                
+                dbTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                dbTableContainers.forEach(container => container.style.display = 'none');
+                document.getElementById(tabName).style.display = 'block';
+            });
+        });
+
+        // Add active style to tabs
+        const style = document.createElement('style');
+        style.textContent = `
+            .db-tab { background:#437fb2; color:#0c1821; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold; transition:.3s; }
+            .db-tab:hover { background:#324a5f; }
+            .db-tab.active { background:#7badd8; }
+        `;
+        document.head.appendChild(style);
+
+        // Load DB stats
+        async function loadDbStats() {
+            try {
+                const response = await fetch('/api/db-stats');
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('stat-students').textContent = result.students;
+                    document.getElementById('stat-teachers').textContent = result.teachers;
+                    document.getElementById('stat-attendance').textContent = result.attendance_records;
+                }
+            } catch (err) {
+                console.error('Error loading DB stats:', err);
+            }
+        }
+
+        // Load students into DB manager
+        async function loadDbStudents() {
+            try {
+                const response = await fetch('/api/students');
+                const result = await response.json();
+                if (result.success) {
+                    const tbody = document.getElementById('db-students-tbody');
+                    tbody.innerHTML = '';
+                    result.students.forEach(student => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${student.id}</td>
+                            <td>${student.name}</td>
+                            <td>${student.email}</td>
+                            <td>${student.section || '-'}</td>
+                            <td>${student.created_at ? new Date(student.created_at).toLocaleDateString() : '-'}</td>
+                            <td>
+                                <button onclick="editDbStudent(${student.id}, '${student.name}', '${student.email}', '${student.section || ''}')" style="background:#4caf50; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Edit</button>
+                                <button onclick="deleteDbStudent(${student.id})" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (err) {
+                console.error('Error loading students:', err);
+            }
+        }
+
+        // Load teachers into DB manager
+        async function loadDbTeachers() {
+            try {
+                const response = await fetch('/api/teachers');
+                const result = await response.json();
+                if (result.success) {
+                    const tbody = document.getElementById('db-teachers-tbody');
+                    tbody.innerHTML = '';
+                    result.teachers.forEach(teacher => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${teacher.id}</td>
+                            <td>${teacher.name}</td>
+                            <td>${teacher.email}</td>
+                            <td>${teacher.grade_level || '-'}</td>
+                            <td>${teacher.section || '-'}</td>
+                            <td>${teacher.created_at ? new Date(teacher.created_at).toLocaleDateString() : '-'}</td>
+                            <td>
+                                <button onclick="editDbTeacher(${teacher.id}, '${teacher.name}', '${teacher.email}', '${teacher.grade_level || ''}', '${teacher.section || ''}')" style="background:#4caf50; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Edit</button>
+                                <button onclick="deleteDbTeacher(${teacher.id})" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Delete</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (err) {
+                console.error('Error loading teachers:', err);
+            }
+        }
+
+        // Load attendance into DB manager
+        async function loadDbAttendance(dateFilter = null) {
+            try {
+                let url = '/api/attendance';
+                if (dateFilter) url += `?date=${dateFilter}`;
+                const response = await fetch(url);
+                const result = await response.json();
+                if (result.success) {
+                    const tbody = document.getElementById('db-attendance-tbody');
+                    tbody.innerHTML = '';
+                    if (result.attendance.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No attendance records found</td></tr>';
+                    } else {
+                        result.attendance.forEach(record => {
+                            const row = document.createElement('tr');
+                            const time = new Date(record.timestamp).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+                            const statusBadge = record.status === 'check_in' ? '<span style="background:#4caf50; color:white; padding:3px 8px; border-radius:4px;">Check In</span>' : '<span style="background:#f44336; color:white; padding:3px 8px; border-radius:4px;">Check Out</span>';
+                            row.innerHTML = `
+                                <td>${record.id}</td>
+                                <td>${record.student_name}</td>
+                                <td>${record.student_email}</td>
+                                <td>${time}</td>
+                                <td>${statusBadge}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading attendance:', err);
+            }
+        }
+
+        // Attendance date filter
+        document.getElementById('attendance-filter-btn').addEventListener('click', () => {
+            const dateInput = document.getElementById('attendance-date-filter').value;
+            loadDbAttendance(dateInput);
+        });
+
+        // Edit DB Student
+        window.editDbStudent = function(id, name, email, section) {
+            const newName = prompt('Edit name:', name);
+            if (newName === null) return;
+            const newEmail = prompt('Edit email:', email);
+            if (newEmail === null) return;
+            const newSection = prompt('Edit section:', section);
+            if (newSection === null) return;
+
+            fetch(`/api/student/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: newName,
+                    email: newEmail,
+                    section: newSection
+                })
+            }).then(r => r.json()).then(result => {
+                if (result.success) {
+                    alert('Student updated!');
+                    loadDbStudents();
+                } else {
+                    alert(result.error || 'Failed to update');
+                }
+            }).catch(err => alert('Error: ' + err));
+        };
+
+        // Delete DB Student
+        window.deleteDbStudent = function(id) {
+            if (!confirm('Are you sure you want to delete this student?')) return;
+            fetch(`/api/student/${id}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Student deleted!');
+                        loadDbStudents();
+                        loadDbStats();
+                    } else {
+                        alert(result.error || 'Failed to delete');
+                    }
+                }).catch(err => alert('Error: ' + err));
+        };
+
+        // Edit DB Teacher
+        window.editDbTeacher = function(id, name, email, gradeLevel, section) {
+            const newName = prompt('Edit name:', name);
+            if (newName === null) return;
+            const newEmail = prompt('Edit email:', email);
+            if (newEmail === null) return;
+            const newGradeLevel = prompt('Edit grade level (11 or 12):', gradeLevel);
+            if (newGradeLevel === null) return;
+            const newSection = prompt('Edit section:', section);
+            if (newSection === null) return;
+
+            fetch(`/api/teacher/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: newName,
+                    email: newEmail,
+                    grade_level: newGradeLevel,
+                    section: newSection
+                })
+            }).then(r => r.json()).then(result => {
+                if (result.success) {
+                    alert('Teacher updated!');
+                    loadDbTeachers();
+                } else {
+                    alert(result.error || 'Failed to update');
+                }
+            }).catch(err => alert('Error: ' + err));
+        };
+
+        // Delete DB Teacher
+        window.deleteDbTeacher = function(id) {
+            if (!confirm('Are you sure you want to delete this teacher?')) return;
+            fetch(`/api/teacher/${id}`, { method: 'DELETE' })
+                .then(r => r.json())
+                .then(result => {
+                    if (result.success) {
+                        alert('Teacher deleted!');
+                        loadDbTeachers();
+                        loadDbStats();
+                    } else {
+                        alert(result.error || 'Failed to delete');
+                    }
+                }).catch(err => alert('Error: ' + err));
+        };
+
+        // Load all DB data on page init
+        loadDbStats();
+        loadDbStudents();
+        loadDbTeachers();
+        loadDbAttendance();
+        
+        // Load attendance stats and config
+        loadAttendanceStats();
+        loadTimeConfig();
+        
+        // Refresh DB data every 30 seconds
+        setInterval(() => {
+            loadDbStats();
+            loadDbStudents();
+            loadDbTeachers();
+            loadAttendanceStats();
+        }, 30000);
+
+        // ==================== ATTENDANCE STATS ====================
+        async function loadAttendanceStats() {
+            try {
+                const response = await fetch('/api/admin/dashboard-stats');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const stats = result.stats;
+                    
+                    // Update summary cards
+                    document.getElementById('total-students').textContent = stats.total_students;
+                    document.getElementById('total-present').textContent = stats.present;
+                    document.getElementById('total-absent').textContent = stats.absent;
+                    document.getElementById('total-late').textContent = stats.late;
+                    document.getElementById('total-cutting').textContent = stats.cutting;
+                    
+                    // Render bar chart
+                    renderStatusChart(stats);
+                    
+                    // Populate section breakdown table
+                    const tbody = document.getElementById('section-stats-tbody');
+                    tbody.innerHTML = '';
+                    
+                    for (const [section, sectionStats] of Object.entries(stats.by_section)) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${section}</td>
+                            <td>${sectionStats.total}</td>
+                            <td style="color: green; font-weight: bold;">${sectionStats.present}</td>
+                            <td style="color: red; font-weight: bold;">${sectionStats.absent}</td>
+                            <td style="color: orange; font-weight: bold;">${sectionStats.late}</td>
+                            <td style="color: #e53e3e; font-weight: bold;">${sectionStats.cutting}</td>
+                        `;
+                        tbody.appendChild(row);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading attendance stats:', error);
+            }
+        }
+
+        function renderStatusChart(stats) {
+            const chartContainer = document.getElementById('status-chart');
+            const total = stats.total_students || 1; // Prevent divide by zero
+            
+            const presentPercent = (stats.present / total) * 100;
+            const absentPercent = (stats.absent / total) * 100;
+            const latePercent = (stats.late / total) * 100;
+            const cuttingPercent = (stats.cutting / total) * 100;
+            
+            chartContainer.innerHTML = `
+                <div class="bar-row">
+                    <span class="bar-label">Present</span>
+                    <div class="bar-container">
+                        <div class="bar bar-present" style="width: ${presentPercent}%"></div>
+                    </div>
+                    <span class="bar-value">${stats.present} (${presentPercent.toFixed(1)}%)</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Absent</span>
+                    <div class="bar-container">
+                        <div class="bar bar-absent" style="width: ${absentPercent}%"></div>
+                    </div>
+                    <span class="bar-value">${stats.absent} (${absentPercent.toFixed(1)}%)</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Late</span>
+                    <div class="bar-container">
+                        <div class="bar bar-late" style="width: ${latePercent}%"></div>
+                    </div>
+                    <span class="bar-value">${stats.late} (${latePercent.toFixed(1)}%)</span>
+                </div>
+                <div class="bar-row">
+                    <span class="bar-label">Cutting</span>
+                    <div class="bar-container">
+                        <div class="bar bar-cutting" style="width: ${cuttingPercent}%"></div>
+                    </div>
+                    <span class="bar-value">${stats.cutting} (${cuttingPercent.toFixed(1)}%)</span>
+                </div>
+            `;
+        }
+
+        // Auto-mark button
+        document.getElementById('auto-mark-btn').addEventListener('click', async () => {
+            if (!confirm('This will mark students as ABSENT (if not checked in) or CUTTING (if not checked out). Continue?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/attendance/auto-mark', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(`Auto-mark complete!\n\nMarked ${result.marked_absent} students as ABSENT\nMarked ${result.marked_cutting} students as CUTTING`);
+                    loadAttendanceStats();
+                } else {
+                    alert(result.error || 'Failed to run auto-mark');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Auto-mark error:', error);
+            }
+        });
+
+        // ==================== TIME CONFIGURATION ====================
+        async function loadTimeConfig() {
+            try {
+                const response = await fetch('/api/admin/config');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const config = result.config;
+                    
+                    // Set time inputs
+                    document.getElementById('check-in-start').value = config.check_in_start_time;
+                    document.getElementById('check-in-end').value = config.check_in_end_time;
+                    document.getElementById('check-out-start').value = config.check_out_start_time;
+                    document.getElementById('check-out-end').value = config.check_out_end_time;
+                    
+                    // Set checkboxes
+                    document.getElementById('auto-absent').checked = config.auto_mark_absent_enabled;
+                    document.getElementById('auto-cutting').checked = config.auto_mark_cutting_enabled;
+                    document.getElementById('email-enabled').checked = config.email_notifications_enabled;
+                    document.getElementById('notify-present').checked = config.notify_on_present;
+                    document.getElementById('notify-absent').checked = config.notify_on_absent;
+                    document.getElementById('notify-late').checked = config.notify_on_late;
+                    document.getElementById('notify-cutting').checked = config.notify_on_cutting;
+                    
+                    // Set SMTP email settings
+                    document.getElementById('smtp-email').value = config.smtp_email || '';
+                    document.getElementById('smtp-password').value = config.smtp_password || '';
+                    document.getElementById('smtp-server').value = config.smtp_server || 'smtp.gmail.com';
+                    document.getElementById('smtp-port').value = config.smtp_port || 587;
+                }
+            } catch (error) {
+                console.error('Error loading time config:', error);
+            }
+        }
+
+        // Time config form submission
+        document.getElementById('time-config-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const config = {
+                check_in_start_time: document.getElementById('check-in-start').value,
+                check_in_end_time: document.getElementById('check-in-end').value,
+                check_out_start_time: document.getElementById('check-out-start').value,
+                check_out_end_time: document.getElementById('check-out-end').value,
+                auto_mark_absent_enabled: document.getElementById('auto-absent').checked,
+                auto_mark_cutting_enabled: document.getElementById('auto-cutting').checked,
+                email_notifications_enabled: document.getElementById('email-enabled').checked,
+                notify_on_present: document.getElementById('notify-present').checked,
+                notify_on_absent: document.getElementById('notify-absent').checked,
+                notify_on_late: document.getElementById('notify-late').checked,
+                notify_on_cutting: document.getElementById('notify-cutting').checked,
+                smtp_email: document.getElementById('smtp-email').value,
+                smtp_password: document.getElementById('smtp-password').value,
+                smtp_server: document.getElementById('smtp-server').value,
+                smtp_port: document.getElementById('smtp-port').value
+            };
+            
+            try {
+                const response = await fetch('/api/admin/config', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Configuration saved successfully!');
+                } else {
+                    alert(result.error || 'Failed to save configuration');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Save config error:', error);
+            }
+        });
+        
+        // Test email button
+        document.getElementById('test-email-btn').addEventListener('click', async () => {
+            const testEmail = prompt('Enter email address to send test email:', 'your-email@gmail.com');
+            if (!testEmail) return;
+            
+            try {
+                const response = await fetch('/api/admin/test-email', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test_email: testEmail })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✓ ' + result.message);
+                } else {
+                    alert('✗ ' + (result.error || 'Failed to send test email'));
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Test email error:', error);
+            }
+        });
     </script>
 </body>
 </html>

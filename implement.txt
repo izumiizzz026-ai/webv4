@@ -1,0 +1,4 @@
+If possible, make it so that the virtual environment is always running (Or make the testing process easier by implementing whatever changes without breaking the app)
+Make a function to get access to the database within the python app
+Run a few tests to figure out improvements
+Implement CRUD(Create, Read, Update, Delete) functions for the admin panel

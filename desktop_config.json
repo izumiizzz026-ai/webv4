@@ -1,0 +1,9 @@
+{
+  "server_url": "http://localhost:5000",
+  "mode": "offline",
+  "cloud_url": "https://your-app.railway.app",
+  "notes": {
+    "mode_options": "Set 'mode' to 'online' to connect to cloud server, or 'offline' to run local server",
+    "cloud_url": "Replace with your actual deployed server URL (e.g., https://qr-attendance.railway.app)"
+  }
+}

@@ -1,0 +1,154 @@
+# QR Attendance System - Unified Manual (Web & Desktop)
+
+This manual consolidates all setup, deployment, and operational instructions for both the web and desktop (EXE) versions of the QR Attendance System. Duplicate steps are merged, and important notes for each environment are included.
+
+---
+
+## 1. Prerequisites
+- **Windows 10/11** (recommended for desktop)
+- **Python 3.11+** (required for building or running from source)
+- **Git** (optional, for cloning the repo)
+- **PowerShell** (for scripts/builds)
+- **PyInstaller** (for building EXE: `pip install pyinstaller`)
+- **NSIS** (for Windows installer, optional: https://nsis.sourceforge.io/Download)
+
+---
+
+## 2. Obtaining the Source Code
+- **Copy or clone** the project folder to your device.
+- **Do NOT copy any `attendance.db` or backup files** if you want a fresh, empty database.
+- All static HTML, CSS, and JS files are included in the repo.
+
+---
+
+## 3. Python Environment & Dependencies
+- Open PowerShell in the project folder.
+- Create and activate a virtual environment:
+  ```powershell
+  python -m venv .\venv
+  .\venv\Scripts\Activate.ps1
+  ```
+- Install dependencies:
+  ```powershell
+  pip install -r requirements.txt
+  ```
+  Or, for manual install:
+  ```powershell
+  pip install flask flask-bcrypt flask-login flask-sqlalchemy psycopg2-binary python-dotenv "qrcode[pil]"
+  ```
+
+---
+
+## 4. Running the Web Application
+- Start the server:
+  ```powershell
+  python .\app.py
+  ```
+- The app runs on port 5000 by default. Access via browser at `http://localhost:5000`.
+- On first run, a new `attendance.db` is created if not present.
+- **Environment variables for production:**
+  - `FLASK_SECRET_KEY` (required for security)
+  - `DATABASE_URL` (e.g., for PostgreSQL in production)
+
+---
+
+## 5. Building & Running the Desktop Application (EXE)
+- **Build EXE:**
+  ```powershell
+  pyinstaller QRAttendance.spec --clean
+  # or use the build script
+  .\build.ps1
+  ```
+- **Run EXE:**
+  - Double-click `dist/QRAttendance.exe` or run from PowerShell:
+    ```powershell
+    .\dist\QRAttendance.exe
+    ```
+- **Installer (optional):**
+  - Install NSIS, then run:
+    ```powershell
+    makensis QRAttendance.nsi
+    ```
+  - Produces `QRAttendance-Setup-1.0.0.exe` for distribution.
+- **No Python required for end users** (EXE bundles everything).
+- **Settings:**
+  - By default, uses `attendance.db` in the app folder and port 5000.
+  - To customize, create a `.env` file with:
+    ```
+    FLASK_SECRET_KEY=your-secret-key
+    DATABASE_URL=sqlite:///attendance.db
+    ```
+
+---
+
+## 6. Initial Account Setup
+- Use the web or desktop interface to create student and teacher accounts.
+- **Admin bootstrap:**
+  - Email: `admin@teacher`
+  - Password: `system123`
+  - Logging in with these credentials creates the admin teacher account if it does not exist.
+
+---
+
+## 7. Database & Data Management
+- **Default:** SQLite file `attendance.db` in the app directory.
+- **Do NOT copy old database files** for a fresh install.
+- **Backup `attendance.db` regularly** for data safety.
+- **Production:** Use PostgreSQL and set `DATABASE_URL` accordingly.
+- **Schema changes:** Use Flask-Migrate/Alembic for production DBs.
+
+---
+
+## 8. API & Features Overview
+- All endpoints accept both JSON and form data.
+- Key endpoints:
+  - `/api/signup`, `/api/login`, `/api/attendance/scan`, `/api/student/<id>/qr-code`, `/api/student/<id>/qr-image`
+  - Admin/teacher endpoints for managing students, teachers, and attendance records.
+- **Database Manager:**
+  - Admins can view, edit, and delete records from the admin panel.
+  - See `DATABASE_MANAGER_SUMMARY.md` for details.
+
+---
+
+## 9. Distribution Options (Desktop)
+- **Portable EXE:** Single file, no install needed.
+- **Windows Installer:** Professional setup, Start Menu shortcuts, uninstall support.
+- **Portable ZIP:** Extract and run.
+
+---
+
+## 10. Troubleshooting & Notes
+- **Port 5000 in use:** Close other instances or change port in `desktop_main.py`.
+- **Antivirus warnings:** Right-click EXE → Properties → Unblock.
+- **Camera issues:** Grant permissions, close other apps using camera.
+- **Database locked:** Only one instance should run at a time.
+- **Web/EXE work identically:** Both serve the same UI and logic.
+- **No Python needed for EXE users.**
+- **All static files are bundled in EXE.**
+
+---
+
+## 11. Deployment (Web/Cloud)
+- Use Railway, Render, or Heroku for cloud hosting.
+- Set `DATABASE_URL` and `FLASK_SECRET_KEY` in your cloud environment.
+- Use Gunicorn (Linux) or Waitress (Windows) for production servers.
+- See `DEPLOYMENT.md` for full cloud deployment steps.
+
+---
+
+## 12. Security & Best Practices
+- Change the default admin password after first login.
+- Never use `debug=True` in production.
+- Use strong, unique `FLASK_SECRET_KEY`.
+- Regularly back up your database.
+- Add rate-limiting and TLS for production deployments.
+
+---
+
+## 13. Further Reading
+- See `BUILD_GUIDE.md`, `DESKTOP_APP_SETUP.md`, `DATABASE_MANAGER_SUMMARY.md`, and `DEPLOYMENT.md` for advanced topics and troubleshooting.
+- For updates, always refer to the latest version of this manual.
+
+---
+
+**This manual covers both web and desktop usage. All instructions are unified and important notes for each environment are included.**

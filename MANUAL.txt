@@ -1,0 +1,159 @@
+QR Attendance App — Developer & Operator Manual
+
+Overview
+
+This document explains how to set up, run, test, and maintain the QR Attendance Flask app contained in this repository.
+
+Prerequisites
+
+- Python 3.11+ (project requires >=3.11 per pyproject.toml)
+- PowerShell (Windows) or a Unix shell
+- Recommended: a virtual environment for isolating dependencies
+
+Files of interest
+
+- `app.py` — single-file Flask app that contains models (Student, Teacher, Attendance), routes, and app configuration.
+- `index.html`, `accountcreate.html`, `admin.html`, `teacher.html`, `student.html` — static front-end HTML pages served by Flask via `send_file`.
+- `CSS/` — styles. `CSS/stuff.css` contains base styles and responsive helpers. `CSS/pages.css` contains shared page rules extracted from inline styles.
+- `JS/mobile-nav.js` — small helper implementing slide-out mobile nav and overlay.
+- `requirements.txt` — runtime dependency list (mirror of `pyproject.toml`).
+- `run.ps1` — PowerShell helper: creates/activates venv, installs requirements, runs tests or starts the app.
+- `tests/test_db.py` — lightweight DB test script using in-memory SQLite.
+- `tests/MOBILE_TESTS.md` — manual mobile/responsive test checklist.
+
+Setup (local development)
+
+1. Create and activate a virtual environment (PowerShell):
+
+   ```powershell
+   python -m venv .\venv
+   .\venv\Scripts\Activate.ps1
+   ```
+
+2. Install dependencies:
+
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+3. Start the app for development (default port 5000):
+
+   ```powershell
+   $env:FLASK_SECRET_KEY = 'dev' ; python .\app.py
+   ```
+
+4. Use `run.ps1` for convenience (creates venv and installs deps if needed):
+
+   - Start app: `.
+un.ps1`
+   - Run tests: `.
+un.ps1 -Action test`
+
+Database
+
+- Default: SQLite file `attendance.db` in the project root (unless `DATABASE_URL` env var is set).
+- No migrations are included; schema is created at startup via `db.create_all()`.
+- For schema changes, add migrations using Flask-Migrate/Alembic before applying changes on production databases.
+
+Seeding admin user
+
+- The app supports an automatic bootstrap: logging in with email `admin@teacher` and password `system123` will create and log in an admin `Teacher` account if one doesn't exist. Use this for initial admin setup.
+
+API endpoints (selected)
+
+- POST /api/signup
+  - Accepts JSON or form fields: `full_name` (or `fullname`), `email`, `password`, `confirm_password` (or `cpwd`).
+  - Returns JSON with success and redirect.
+
+- POST /api/login
+  - Accepts `email`, `pwd` (or `password`), and `user_type` (`student` or `teacher`).
+  - Special-cased admin: `admin@teacher` / `system123`.
+
+- POST /api/attendance/scan
+  - Teacher-only. Accepts `{ qr_data: 'STUDENT_{id}_{email}' }` and toggles check_in/check_out.
+
+- GET /api/student/<id>/qr-code
+  - Returns PNG attachment for the student's QR code. Students can download their own; teachers can download any student QR.
+
+- GET /api/student/<id>/qr-image
+  - Returns base64 data URL of QR image for display in the UI.
+
+- Teacher management
+  - POST /api/admin/create-teacher (teacher-only)
+  - GET /api/teachers (teacher-only)
+  - GET/PUT/DELETE /api/teacher/<id> (teacher-only)
+
+- Database Admin Endpoints (NEW)
+  - GET /api/db-stats (teacher-only): Returns counts of students, teachers, and attendance records.
+  - GET /api/attendance (teacher-only): Returns all attendance records with optional date filter (?date=YYYY-MM-DD).
+  - Edit/Delete endpoints for students and teachers (PUT/DELETE /api/student/<id>, /api/teacher/<id>).
+
+Developer workflows
+
+- Frontend changes
+  - Edit HTML in repo root. Prefer moving shared CSS rules to `CSS/pages.css` and page-specific overrides to `CSS/stuff.css` or a dedicated file.
+  - Use the browser DevTools device toolbar to test breakpoints (1024px, 768px, 480px).
+  - Mobile nav behavior is in `JS/mobile-nav.js`.
+
+- Backend changes
+  - Keep `get_id()` format and `login_manager.user_loader` in sync.
+  - Preserve accepting both JSON and form data when adding endpoints (use `request.get_json() if request.is_json else request.form`).
+
+- Admin Database Manager
+  - Admins can access the "Database Manager" section from the side nav in admin.html.
+  - View counts of students, teachers, and attendance records via DB stats cards.
+  - Tab-based interface: Students, Teachers, Attendance.
+  - Students/Teachers: inline Edit and Delete buttons. Edit opens a prompt dialog; Delete confirms before removing.
+  - Attendance: filter by date using the date picker and "Filter" button.
+  - Data auto-refreshes every 30 seconds to show real-time updates.
+  - All CRUD operations are protected by teacher-only permissions on the backend.
+
+Testing
+
+- Run the included quick DB test:
+
+  ```powershell
+  .\run.ps1 -Action test
+  ```
+
+- The test runs `tests/test_db.py` which imports `app.py` by path and runs an in-memory SQLite DB to validate model CRUD and QR generation.
+
+- For CI/automation, convert the test to pytest and add a GitHub Actions workflow that creates a venv, installs dependencies, runs tests and lints.
+
+Deployment notes
+
+- Do NOT run with `debug=True` in production. Set `FLASK_SECRET_KEY` and `DATABASE_URL` environment variables.
+- Recommended production server options:
+  - Linux: use Gunicorn + systemd with a Postgres DB (set `DATABASE_URL` accordingly).
+  - Windows: use Waitress or run behind IIS / a reverse proxy; configure `DATABASE_URL` with a managed DB.
+- Add Flask-Migrate/Alembic before changing DB schemas on production databases.
+
+Security & maintenance
+
+- Change the default admin bootstrap flow if you need more secure provisioning (don't rely on `system123` in production).
+- Consider adding rate-limiting on login and attendance endpoints and TLS termination at the proxy level.
+- Regularly back up `attendance.db` or your production DB.
+
+Troubleshooting
+
+- "ModuleNotFoundError: No module named 'app'" in tests: tests in `tests/test_db.py` import `app.py` by file path to avoid this; run tests with the repo root as working directory.
+- "Database locked" errors with SQLite: close other connections or use a proper server DB (Postgres) for concurrency.
+- QR not generating: ensure `Pillow` is installed (dependency is in `requirements.txt`) and that `Student.generate_qr_code()` has been called and committed.
+
+Extending this manual
+
+I'll keep this file updated whenever I make code changes. If you want automated checks, CI workflows, or Docker deployment steps added to this manual, tell me which target environment and I will add them and run quick validation.
+
+---
+
+Database Manager - Implementation Summary
+
+The project now includes a Database Manager in the admin panel that provides full CRUD capabilities for Students, Teachers, and Attendance records. Key features:
+
+- Backend endpoints: `/api/db-stats`, `/api/attendance`, `/api/student/<id>`, `/api/teacher/<id>` (all teacher-only).
+- Frontend: A `Database Manager` section in `admin.html` showing stats cards, tabbed views (Students, Teachers, Attendance), inline edit/delete actions, and a date filter for attendance.
+- UX: Inline `prompt()` edit dialogs, confirmation on delete, status badges for attendance, and auto-refresh every 30 seconds.
+- Styling: Added responsive table containers and tab styles in `CSS/pages.css`.
+- Docs: See `DATABASE_MANAGER_SUMMARY.md` for a full implementation report and usage notes.
+
+If you want the edit dialogs replaced with modal forms or to add export (CSV) functionality, I can implement those next.

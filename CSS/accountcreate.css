@@ -99,7 +99,8 @@
   display: flex;
   flex-direction: column;
   width: 65.104vh;
-  height: 80.87vh;
+  min-height: 80.87vh;
+  height: auto;
 }
 
 .signup-box {
@@ -107,10 +108,13 @@
   flex-direction: column;
   border-radius: 24px;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   background-color: #0c1821;
   width: 65.104vh;
-  height: 79.016vh;
+  min-height: 79.016vh;
+  height: auto;
+  padding: 30px 20px;
+  gap: 5px;
 }
 
 .signup {
@@ -148,6 +152,33 @@ input[type=text], input[type=password], input[type=email] {
 input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
   background-color:#b1aebf;
 }
+
+/* Select dropdown styles */
+select {
+  font-family: "DM Sans", sans-serif;
+  background-color: #ccc9dc;
+  border: none;
+  border-radius: 12px;
+  padding: 0 10px;
+  font-size: 0.929rem;
+  width: 60.378vh;
+  height: 5.716vh;
+  margin-bottom: 2.638vh;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230c1821%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+select:focus {
+  background-color: #b1aebf;
+  outline: none;
+}
+
 input[type=submit] {
   background-color: #04080b;
   color: #0c1821;
@@ -186,4 +217,26 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+  body { padding: 100px 30px 30px; }
+  .signup-form, .signup-box { width: 90%; }
+  input[type=text], input[type=password], input[type=email], select { width: 92%; }
+  input[type=submit] { width: 60%; }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  body { padding: 80px 12px 20px; }
+  .signup-form, .signup-box { width: 100%; padding: 20px; }
+  .signup { font-size: 2rem; }
+  label { font-size: 1rem; }
+  input[type=text], input[type=password], input[type=email], select { width: 100%; height: 48px; font-size: 0.95rem; }
+  input[type=submit] { width: 100%; height: 52px; font-size: 1.25rem; }
+  .create-button { width: 140px; height: 40px; }
+  .navbar { height: 70px; }
+  .luis { font-size: 1.1rem; }
+  .qr { font-size: 0.9rem; }
 }

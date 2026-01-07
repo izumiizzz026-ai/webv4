@@ -196,6 +196,13 @@ window.addEventListener('resize', () => {
   const teacherBtn = document.getElementById('teacher-btn');
   const studentBtn = document.getElementById('student-btn');
   const userTypeInput = document.getElementById('user-type');
+  const loginForm = document.getElementById('login-form');
+
+  // Initialize student button as active
+  studentBtn.style.backgroundColor = '#7badd8';
+  studentBtn.style.color = '#0c1821';
+  teacherBtn.style.backgroundColor = '#0c1821';
+  teacherBtn.style.color = '#7badd8';
 
   teacherBtn.addEventListener('click', () => {
     currentUserType = 'teacher';
@@ -204,6 +211,9 @@ window.addEventListener('resize', () => {
     teacherBtn.style.color = '#0c1821';
     studentBtn.style.backgroundColor = '#0c1821';
     studentBtn.style.color = '#7badd8';
+    // Clear form when switching
+    loginForm.reset();
+    userTypeInput.value = 'teacher';
   });
 
   studentBtn.addEventListener('click', () => {
@@ -213,18 +223,30 @@ window.addEventListener('resize', () => {
     studentBtn.style.color = '#0c1821';
     teacherBtn.style.backgroundColor = '#0c1821';
     teacherBtn.style.color = '#7badd8';
+    // Clear form when switching
+    loginForm.reset();
+    userTypeInput.value = 'student';
   });
 
   // Login form submission
-  document.getElementById('login-form').addEventListener('submit', async function(e) {
+  loginForm.addEventListener('submit', async function(e) {
     e.preventDefault();
+    
+    // Ensure user_type matches the selected button
+    const selectedUserType = currentUserType;
     
     const formData = new FormData(this);
     const data = {
       email: formData.get('email'),
       pwd: formData.get('pwd'),
-      user_type: formData.get('user_type')
+      user_type: selectedUserType  // Force use the selected user type
     };
+
+    // Validate that user_type is set correctly
+    if (!data.user_type || (data.user_type !== 'student' && data.user_type !== 'teacher')) {
+      alert('Please select Student or Teacher login type');
+      return;
+    }
 
     try {
       const response = await fetch('/api/login', {

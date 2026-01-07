@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Panel - QR Attendance</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <link rel="stylesheet" href="CSS/stuff.css">
+    <link rel="stylesheet" href="CSS/pages.css">
+    <script defer src="JS/mobile-nav.js"></script>
+</head>
+<body>
+    <!-- Main Navbar -->
+    <nav class="navbar">
+        <div class="nav-header">
+            <span class="luis">Teacher Panel</span>
+            <span class="qr">QR Attendance System</span>
+        </div>
+        <button class="hamburger" id="hamburger">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </button>
+        <div class="create-container">
+            <button class="create-button" id="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <!-- Side Navbar -->
+    <nav class="side-navbar" id="side-navbar">
+        <a href="#" class="nav-link active" data-section="qr-scanner">QR Scanner</a>
+        <a href="#" class="nav-link" data-section="dashboard">Dashboard</a>
+        <a href="#" class="nav-link" data-section="student-status">Student Status</a>
+        <a href="#" class="nav-link" data-section="edit-panel">Edit Student</a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- QR Scanner Section -->
+        <div id="qr-scanner" class="content-section active">
+            <div class="qr-scanner">
+                <h2>QR Code Scanner</h2>
+                <div class="scanner-mode-selector">
+                    <button id="web-scanner-mode" class="mode-btn active">Web Scanner</button>
+                    <button id="desktop-scanner-mode" class="mode-btn">Desktop Scanner</button>
+                </div>
+                <div id="web-scanner-container" class="scanner-container">
+                    <div id="qr-reader"></div>
+                    <div class="scanner-controls">
+                        <button id="start-scanner-btn">Start Scanner</button>
+                        <button id="stop-scanner-btn" style="display: none;">Stop Scanner</button>
+                    </div>
+                </div>
+                <div id="desktop-scanner-container" class="scanner-container" style="display: none;">
+                    <p class="scanner-info">
+                        Click "Launch Desktop Scanner" to open the webcam scanner.<br>
+                        The scanner will automatically update attendance when QR codes are scanned.<br>
+                        Press 'Q' on your keyboard to close the scanner window.
+                    </p>
+                    <div class="scanner-controls">
+                        <button id="launch-desktop-scanner-btn">Launch Desktop Scanner</button>
+                    </div>
+                    <div id="desktop-scanner-status"></div>
+                </div>
+                <div id="scan-result" class="scan-result"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="content-section">
+            <div class="dashboard">
+                <h2>Student Records</h2>
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-records">
+                        <!-- Records will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Student Status Section -->
+        <div id="student-status" class="content-section">
+            <div class="status-panel">
+                <h2>Student Attendance Status</h2>
+                <p style="color:#666; margin-bottom: 20px;">View and edit attendance status for your students. Changes will notify guardians via email.</p>
+                
+                <!-- Status Summary -->
+                <div class="stats-container" id="teacher-status-summary">
+                    <div class="stat-card stat-total">
+                        <div class="stat-value" id="teacher-total">0</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-card stat-present">
+                        <div class="stat-value" id="teacher-present">0</div>
+                        <div class="stat-label">✓ Present</div>
+                    </div>
+                    <div class="stat-card stat-absent">
+                        <div class="stat-value" id="teacher-absent">0</div>
+                        <div class="stat-label">✗ Absent</div>
+                    </div>
+                    <div class="stat-card stat-late">
+                        <div class="stat-value" id="teacher-late">0</div>
+                        <div class="stat-label">⏱ Late</div>
+                    </div>
+                    <div class="stat-card stat-cutting">
+                        <div class="stat-value" id="teacher-cutting">0</div>
+                        <div class="stat-label">⚠ Cutting</div>
+                    </div>
+                </div>
+                
+                <!-- Student Status Table -->
+                <div class="table-wrapper">
+                    <table class="student-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Check-in</th>
+                                <th>Check-out</th>
+                                <th>Status</th>
+                                <th>Guardian</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-status-records">
+                            <!-- Records will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button id="refresh-status-btn" class="submit-btn" style="margin-top: 20px;">🔄 Refresh Status</button>
+            </div>
+        </div>
+
+        <!-- Edit Panel Section -->
+        <div id="edit-panel" class="content-section">
+            <div class="edit-panel">
+                <h2>Edit Student Record</h2>
+                <select id="student-select">
+                    <option value="">Select a Student</option>
+                    <!-- Options will be populated by JS -->
+                </select>
+                <form id="edit-form" style="display: none;">
+                    <label for="edit-name">Name</label>
+                    <input type="text" id="edit-name" name="name" required>
+
+                    <label for="edit-email">Email</label>
+                    <input type="email" id="edit-email" name="email" required>
+
+                    <label for="edit-section">Section</label>
+                    <input type="text" id="edit-section" name="section">
+
+                    <button type="submit">Update Record</button>
+                    <button type="button" id="delete-btn">Delete Record</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let students = [];
+        let html5QrcodeScanner = null;
+        let isScanning = false;
+
+        // Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = e.target.getAttribute('data-section');
+
+                // Stop scanner when switching sections
+                if (isScanning) {
+                    stopScanner();
+                }
+
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                contentSections.forEach(s => s.classList.remove('active'));
+
+                // Add active class to clicked link and corresponding section
+                e.target.classList.add('active');
+                document.getElementById(section).classList.add('active');
+            });
+        });
+
+        // Hamburger menu for mobile
+        const hamburger = document.getElementById('hamburger');
+        const sideNavbar = document.getElementById('side-navbar');
+
+        hamburger.addEventListener('click', () => {
+            sideNavbar.classList.toggle('active');
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = result.redirect || '/';
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        });
+
+        // QR Scanner Functions
+        function onScanSuccess(decodedText, decodedResult) {
+            if (isScanning) {
+                stopScanner();
+                handleScanResult(decodedText);
+            }
+        }
+
+        function onScanFailure(error) {
+            // Ignore scan failures
+        }
+
+        async function startScanner() {
+            if (isScanning) return;
+
+            try {
+                html5QrcodeScanner = new Html5Qrcode("qr-reader");
+                await html5QrcodeScanner.start(
+                    { facingMode: "environment" },
+                    {
+                        fps: 10,
+                        qrbox: { width: 250, height: 250 }
+                    },
+                    onScanSuccess,
+                    onScanFailure
+                );
+                isScanning = true;
+                document.getElementById('start-scanner-btn').style.display = 'none';
+                document.getElementById('stop-scanner-btn').style.display = 'inline-block';
+            } catch (err) {
+                console.error('Error starting scanner:', err);
+                showScanResult('Error starting scanner. Please check camera permissions.', 'error');
+            }
+        }
+
+        function stopScanner() {
+            if (!isScanning || !html5QrcodeScanner) return;
+
+            html5QrcodeScanner.stop().then(() => {
+                html5QrcodeScanner.clear();
+                isScanning = false;
+                document.getElementById('start-scanner-btn').style.display = 'inline-block';
+                document.getElementById('stop-scanner-btn').style.display = 'none';
+            }).catch(err => {
+                console.error('Error stopping scanner:', err);
+            });
+        }
+
+        async function handleScanResult(qrData) {
+            showScanResult('Processing...', '');
+            
+            try {
+                const response = await fetch('/api/attendance/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ qr_data: qrData })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showScanResult(
+                        `${result.message} - ${new Date(result.timestamp).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}`,
+                        'success'
+                    );
+                    populateDashboard();
+                } else {
+                    showScanResult(result.error || 'Failed to process QR code', 'error');
+                }
+            } catch (error) {
+                showScanResult('Network error. Please try again.', 'error');
+                console.error('Scan error:', error);
+            }
+        }
+
+        function showScanResult(message, type) {
+            const resultDiv = document.getElementById('scan-result');
+            resultDiv.textContent = message;
+            resultDiv.className = `scan-result ${type}`;
+            resultDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        document.getElementById('start-scanner-btn').addEventListener('click', startScanner);
+        document.getElementById('stop-scanner-btn').addEventListener('click', stopScanner);
+
+        // Scanner Mode Switching
+        const webScannerMode = document.getElementById('web-scanner-mode');
+        const desktopScannerMode = document.getElementById('desktop-scanner-mode');
+        const webScannerContainer = document.getElementById('web-scanner-container');
+        const desktopScannerContainer = document.getElementById('desktop-scanner-container');
+
+        webScannerMode.addEventListener('click', () => {
+            if (isScanning) stopScanner();
+            webScannerMode.classList.add('active');
+            desktopScannerMode.classList.remove('active');
+            webScannerContainer.style.display = 'block';
+            desktopScannerContainer.style.display = 'none';
+        });
+
+        desktopScannerMode.addEventListener('click', () => {
+            if (isScanning) stopScanner();
+            desktopScannerMode.classList.add('active');
+            webScannerMode.classList.remove('active');
+            desktopScannerContainer.style.display = 'block';
+            webScannerContainer.style.display = 'none';
+        });
+
+        // Desktop Scanner Launch
+        document.getElementById('launch-desktop-scanner-btn').addEventListener('click', async () => {
+            const statusDiv = document.getElementById('desktop-scanner-status');
+            statusDiv.textContent = 'Launching scanner...';
+            statusDiv.className = 'scan-result';
+            
+            try {
+                const response = await fetch('/api/launch-scanner', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.textContent = result.message + ' Press Q to close the scanner window.';
+                    statusDiv.className = 'scan-result success';
+                    // Auto-refresh dashboard every 5 seconds while scanner might be running
+                    const refreshInterval = setInterval(() => {
+                        populateDashboard();
+                    }, 5000);
+                    
+                    // Stop refresh after 5 minutes
+                    setTimeout(() => clearInterval(refreshInterval), 300000);
+                } else {
+                    statusDiv.textContent = 'Error: ' + (result.error || 'Failed to launch scanner');
+                    statusDiv.className = 'scan-result error';
+                }
+            } catch (error) {
+                statusDiv.textContent = 'Network error. Please ensure the server is running.';
+                statusDiv.className = 'scan-result error';
+                console.error('Launch error:', error);
+            }
+        });
+
+        // Populate Dashboard
+        async function populateDashboard() {
+            try {
+                const response = await fetch('/api/students');
+                const result = await response.json();
+                
+                if (result.success) {
+                    students = result.students;
+                    const tbody = document.getElementById('student-records');
+                    tbody.innerHTML = '';
+                    
+                    // Get status for each student
+                    for (const student of students) {
+                        try {
+                            const statusResponse = await fetch(`/api/student/${student.id}/status`);
+                            const statusResult = await statusResponse.json();
+                            
+                            const row = document.createElement('tr');
+                            const status = statusResult.success ? 
+                                (statusResult.current_status === 'checked_in' ? 'Checked In' : 'Checked Out') : 
+                                'Unknown';
+                            
+                            row.innerHTML = `
+                                <td>${student.id}</td>
+                                <td>${student.name}</td>
+                                <td>${student.email}</td>
+                                <td>${status}</td>
+                            `;
+                            tbody.appendChild(row);
+                        } catch (err) {
+                            console.error(`Error getting status for student ${student.id}:`, err);
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${student.id}</td>
+                                <td>${student.name}</td>
+                                <td>${student.email}</td>
+                                <td>Unknown</td>
+                            `;
+                            tbody.appendChild(row);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+
+        // Populate Edit Select
+        function populateEditSelect() {
+            const select = document.getElementById('student-select');
+            select.innerHTML = '<option value="">Select a Student</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.email})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Edit Form Logic
+        const studentSelect = document.getElementById('student-select');
+        const editForm = document.getElementById('edit-form');
+        const editName = document.getElementById('edit-name');
+        const editEmail = document.getElementById('edit-email');
+        const editSection = document.getElementById('edit-section');
+        const deleteBtn = document.getElementById('delete-btn');
+
+        studentSelect.addEventListener('change', () => {
+            const id = parseInt(studentSelect.value);
+            const student = students.find(s => s.id === id);
+            if (student) {
+                editName.value = student.name;
+                editEmail.value = student.email;
+                editSection.value = student.section || '';
+                editForm.style.display = 'block';
+            } else {
+                editForm.style.display = 'none';
+            }
+        });
+
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = parseInt(studentSelect.value);
+            
+            try {
+                const response = await fetch(`/api/student/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: editName.value,
+                        email: editEmail.value,
+                        section: editSection.value
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Record updated!');
+                    populateDashboard();
+                    populateEditSelect();
+                } else {
+                    alert(result.error || 'Failed to update record');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Update error:', error);
+            }
+        });
+
+        deleteBtn.addEventListener('click', async () => {
+            const id = parseInt(studentSelect.value);
+            if (!confirm('Are you sure you want to delete this student?')) return;
+            
+            try {
+                const response = await fetch(`/api/student/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Record deleted!');
+                    populateDashboard();
+                    populateEditSelect();
+                    editForm.style.display = 'none';
+                } else {
+                    alert(result.error || 'Failed to delete record');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Delete error:', error);
+            }
+        });
+
+        // Initialize
+        populateDashboard();
+        populateEditSelect();
+        loadStudentStatus();
+        
+        // ==================== STUDENT STATUS MANAGEMENT ====================
+        async function loadStudentStatus() {
+            try {
+                const response = await fetch('/api/teacher/students');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const students = result.students;
+                    
+                    // Calculate summary stats
+                    let present = 0, absent = 0, late = 0, cutting = 0;
+                    students.forEach(s => {
+                        if (s.attendance_status === 'PRESENT') present++;
+                        else if (s.attendance_status === 'ABSENT') absent++;
+                        else if (s.attendance_status === 'LATE') late++;
+                        else if (s.attendance_status === 'CUTTING') cutting++;
+                    });
+                    
+                    // Update summary cards
+                    document.getElementById('teacher-total').textContent = students.length;
+                    document.getElementById('teacher-present').textContent = present;
+                    document.getElementById('teacher-absent').textContent = absent;
+                    document.getElementById('teacher-late').textContent = late;
+                    document.getElementById('teacher-cutting').textContent = cutting;
+                    
+                    // Populate table
+                    const tbody = document.getElementById('student-status-records');
+                    tbody.innerHTML = '';
+                    
+                    students.forEach(student => {
+                        const row = document.createElement('tr');
+                        
+                        const statusClass = `status-${student.attendance_status.toLowerCase()}`;
+                        
+                        row.innerHTML = `
+                            <td>${student.full_name}</td>
+                            <td>${student.check_in_time || '-'}</td>
+                            <td>${student.check_out_time || '-'}</td>
+                            <td>
+                                <select class="status-select" data-student-id="${student.id}" onchange="updateStudentStatus(${student.id}, this.value)">
+                                    <option value="PRESENT" ${student.attendance_status === 'PRESENT' ? 'selected' : ''}>✓ PRESENT</option>
+                                    <option value="ABSENT" ${student.attendance_status === 'ABSENT' ? 'selected' : ''}>✗ ABSENT</option>
+                                    <option value="LATE" ${student.attendance_status === 'LATE' ? 'selected' : ''}>⏱ LATE</option>
+                                    <option value="CUTTING" ${student.attendance_status === 'CUTTING' ? 'selected' : ''}>⚠ CUTTING</option>
+                                </select>
+                            </td>
+                            <td>
+                                ${student.guardian_email ? 
+                                    `<span style="color: #48bb78;">✓ ${student.guardian_name || 'Set'}</span>` : 
+                                    `<button class="update-status-btn" onclick="editGuardian(${student.id})">Add Guardian</button>`
+                                }
+                            </td>
+                            <td>
+                                <button class="update-status-btn" onclick="editGuardian(${student.id})">Edit Guardian</button>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading student status:', error);
+            }
+        }
+        
+        // Update student status
+        window.updateStudentStatus = async function(studentId, newStatus) {
+            const reason = prompt('Reason for status change (optional):');
+            
+            try {
+                const response = await fetch(`/api/teacher/student/${studentId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: newStatus,
+                        reason: reason || 'Updated by teacher'
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert(`Status updated: ${result.old_status} → ${result.new_status}\nGuardian will be notified.`);
+                    loadStudentStatus();
+                } else {
+                    alert(result.error || 'Failed to update status');
+                    loadStudentStatus(); // Reload to reset dropdown
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Update status error:', error);
+                loadStudentStatus();
+            }
+        };
+        
+        // Edit guardian info
+        window.editGuardian = async function(studentId) {
+            const guardianName = prompt('Guardian Name:');
+            if (guardianName === null) return;
+            
+            const guardianEmail = prompt('Guardian Email (for notifications):');
+            if (guardianEmail === null) return;
+            
+            const guardianPhone = prompt('Guardian Phone (optional):');
+            
+            try {
+                const response = await fetch(`/api/teacher/student/${studentId}/guardian`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        guardian_name: guardianName,
+                        guardian_email: guardianEmail,
+                        guardian_phone: guardianPhone || '',
+                        notify_on_checkin: true,
+                        notify_on_checkout: true
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    alert('Guardian info updated!');
+                    loadStudentStatus();
+                } else {
+                    alert(result.error || 'Failed to update guardian info');
+                }
+            } catch (error) {
+                alert('Network error. Please try again.');
+                console.error('Update guardian error:', error);
+            }
+        };
+        
+        // Refresh button
+        document.getElementById('refresh-status-btn').addEventListener('click', () => {
+            loadStudentStatus();
+        });
+        
+        // Auto-refresh every 60 seconds
+        setInterval(loadStudentStatus, 60000);
+
+        // Initial load
+        populateDashboard();
+    </script>
+</body>
+</html>
